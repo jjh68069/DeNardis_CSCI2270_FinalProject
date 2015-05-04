@@ -219,12 +219,30 @@ void Hangman::hangmanGame()
             vector<string> correctGuesses;  //vector to hold correct guesses
             vector<string> hangman;  //vector to hold body parts added to tree
 
+            //these will be used to see if a letter has already been guessed
+            string checkArray[20];
+            int checkArrCounter = 0;
+            bool newGuess;
+
+
             while (guess != words[randomInt])  //while loop runs while user's guess is not the completed word
             {
+                newGuess = true;
                 cout<<"Guess: ";
                 cin >> guess;
                 cout<<endl;
                 cin.clear();
+
+                for(int k = 0; k < checkArrCounter; k++)
+                {
+                    if(checkArray[k] == guess)
+                        newGuess = false;
+                }
+                checkArray[checkArrCounter] = guess;
+                checkArrCounter++;
+
+                if(newGuess == true)
+                {
 
                 for (int i=0; i<guess.length(); i++)  //converts every input to lowercase
                 {
@@ -233,12 +251,15 @@ void Hangman::hangmanGame()
 
                 bool correct = false;  //boolean to check if letter is correct or incorrect
 
+
                 for (int i=0; i<letters.size(); i++)  //takes the player's guess and checks it against every letter in the word
                 {
                     int index = 0;
                     if (guess == lettersVector[i])   //if guess is a letter in the lettersVector
                     {
                         cout<<"That's correct! ";
+                        checkArray[checkArrCounter] = guess;
+                        checkArrCounter++;
                         index = i;                         //index is recorded
                         underscores[index] = lettersVector[i];  //and in the underscore vector the corresponding underscore is replaced with the letter
                         correctGuesses.push_back(guess);   //the letter is added to the correctGuesses vector
@@ -305,7 +326,10 @@ void Hangman::hangmanGame()
                     }
                 }
             }
+            else
+                cout << "Please try something new." << endl;//if they tried to repeat a guess
         //} //end of for loop body, for loop ends when last word in words text file is unscrambled
+        }
     }
 
 }
